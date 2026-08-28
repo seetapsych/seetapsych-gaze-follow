@@ -1,0 +1,23 @@
+stage_name: 'eval_dyadic'
+freeze_gaze_backbone: true
+
+weights:
+  heatmap: 1
+  inout: 1
+  pattern: 1
+
+# dataset details
+batch_size: 32
+num_workers: 8
+pin_memory: true
+prefetch_factor: 1
+persistent_workers: true
+
+dataset_name: "dyadic" #Options: dyadic, generated_gaze_pattern, gazefollow
+pattern_type: 'multi_class' 
+# Options: 
+# multi_class for dyadic & generated_gaze_pattern
+# binary_mutual for LAEO 
+# binary_share for VideoCoAtt
+# binary_LAH for childplay
+save_best_metrics: "pattern_Acc" #Options: AUC, pattern_Acc, l2_dist

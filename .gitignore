@@ -1,0 +1,41 @@
+# project
+/.idea/
+/.venv/
+/build/
+/dist/
+/*.egg-info/
+/.eggs/
+/.pytest_cache/
+/.mypy_cache/
+/.ruff_cache/
+/.tox/
+/.nox/
+/htmlcov/
+/.coverage
+/coverage.xml
+/.hypothesis/
+/.cache/
+/.upload/
+/.streamlit/
+/.ipynb_checkpoints/
+*.log
+.env
+
+# generated files
+seetapsych_gaze_follow/_version.py
+
+# compiled files
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.so
+*$py.class
+
+# models
+*.pth
+*.onnx
+*.safetensors
+*.pkl
+*.zip
+*.pt

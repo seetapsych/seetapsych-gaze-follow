@@ -1,0 +1,88 @@
+version: '1.0'
+module:
+  uid: dcb207b9-a61a-4034-a1fb-1c443ab22524
+  name: HeadDetection
+  version: 0.0.1
+  description: 'HeadDetection for CoSI gaze following estimation.'
+  keywords:
+    - Head
+    - Detection
+  requirements:
+    - seetapsych-gaze-follow
+    - ultralytics>=8.4.123
+packages:
+  - uid: b73cc0cf-3300-498f-8795-d1f95a471075
+    name: HeadDetection(CoSI)
+    description: YOLO-based multi-person head detection with configurable confidence and NMS thresholds
+    version: 0.0.1
+    usage_models: []
+    inputs: []
+    provides:
+      - head/detection
+    requires: []
+    entry:
+      method: seetapsych_gaze_follow.head_detection.package.load
+    parameters:
+      - name: img_size
+        type: integer
+        value: 640
+        description: Input image size for the model, this parameter affects the speed and accuracy of head detection
+      - name: conf
+        type: number
+        value: 0.25
+        description: Detection confidence threshold, filters low-confidence boxes to balance false positives/negatives
+      - name: iou
+        type: number
+        value: 0.45
+        description: IoU threshold for NMS, removes duplicate detection boxes
+      - name: max_det
+        type: integer
+        value: 20
+        description: Max head detection boxes per frame, for multi-person gaze following scenarios
+    models:
+      - uid: 15c57b89-d796-44e1-8671-acb78259b1ad
+        name: seeta-gaze-follow-yolo_head.pt
+        version: 0.0.1
+        recommended: true
+        # entry:
+        #   method: seetapsych_gaze_follow.head_detection.model.load
+        download:
+          index: seeta-gaze-follow-yolo_head.pt
+          sha256: dc4f4a2b2e37a65a2524a305dc60de172c23cef6d05551b7a7c6905fd2f14f4b
+          url: https://www.modelscope.cn/models/seetapsych/seetapsych-models/resolve/master/seetapsych/gaze-follow/seeta-gaze-follow-yolo_head.pt
+  - uid: 763b1fd8-b75a-47e9-a0cd-d096687fde7f
+    name: HeadSelection
+    description: Select top-N head detections by size or confidence with spatial sorting options
+    version: 0.0.1
+    priority: 100
+    usage_models: []
+    inputs: []
+    provides:
+      - head/selection
+      - head/detection
+    requires:
+      - head/detection
+    entry:
+      method: seetapsych_gaze_follow.head_selection.package.load
+    parameters:
+      - name: count
+        type: integer
+        value: 1
+        description: Number of head detections to select
+      - name: method
+        type: selection
+        value: max_size
+        selection:
+          - max_size
+          - max_confidence
+        description: Selection method for head detections, max_size or max_confidence
+      - name: sort
+        type: selection
+        value: left-right
+        selection:
+          - left-right
+          - right-left
+          - top-bottom
+          - bottom-top
+        description: Sorting method for head detections
+    models: []

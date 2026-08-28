@@ -1,0 +1,26 @@
+defaults:
+  - model: attended
+  - data: data  # Default dataset configuration
+  - stage: eval_dyadic
+  - _self_
+seed: 42
+device: "cuda:0"
+distributed: false
+data_root: "/data1/GazeData"
+save_dir: "/tmp/outputs"
+pretrained_weights: null
+verbose_load: true
+
+# Prevent .log file creation
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+  job_logging:
+    version: 1
+    disable_existing_loggers: false
+    root:
+      level: CRITICAL
+      handlers: []  # <--- disable any handlers
+    handlers: {}     # <--- ensure no handlers are registered
+    loggers: {}
