@@ -119,4 +119,5 @@ Module config: [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml).
   - `head_location_xyxy`: The source head box.
   - `gaze_point_px`: Predicted gaze point in pixel coordinates.
   - `heatmap`: Per-person attention heatmap.
-  - `social_gaze_id` / `social_gaze_label`: Discrete social gaze classification result (e.g. mutual gaze / averted gaze / looking at other).
+  - `social_gaze_id`: Integer class ID of the social gaze relation. Ordered mapping: 0=share, 1=mutual, 2=single, 3=miss, 4=void.
+  - `social_gaze_label`: Human-readable social gaze relation label. Possible values: share, mutual, single, miss, void. Index of the value matches social_gaze_id.
