@@ -9,6 +9,11 @@ dependencies = [
     "seetapsych-lib",
 ]
 
+[project.urls]
+Homepage = "https://github.com/seetapsych/seetapsych-gaze-follow"
+Repository = "https://github.com/seetapsych/seetapsych-gaze-follow"
+Issues = "https://github.com/seetapsych/seetapsych-gaze-follow/issues"
+
 [project.optional-dependencies]
 all = [
     "einops>=0.8.2",
