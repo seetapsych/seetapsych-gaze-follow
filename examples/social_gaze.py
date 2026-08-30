@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
-import json
 import os
+from typing import Any
 
 import cv2
 import numpy as np
-
 from seetapsych_lib.runtime.factory import Factory
-from seetapsych_lib.runtime.pipeline import Pipeline
+
 # from seetapsych_lib.runtime.runner import Runner
 from seetapsych_lib.runtime.parallel_runner import ParallelRunner as Runner
+from seetapsych_lib.runtime.pipeline import Pipeline
 
-module_root = os.path.join(os.path.dirname(__file__), '../seetapsych_gaze_follow/modules')
+module_root = os.path.join(os.path.dirname(__file__), "../seetapsych_gaze_follow/modules")
 
 PRINCIPAL_COLOR = (0, 255, 0)
 ASSOCIATE_COLOR = (0, 0, 255)
 HEATMAP_ALPHA = 0.40
 
 
-def _heatmap_to_colormap(heatmap, image_size):
+def _heatmap_to_colormap(heatmap: np.ndarray, image_size: tuple[int, int]) -> np.ndarray:
     width, height = image_size
 
     hm = np.asarray(heatmap, dtype=np.float32)
@@ -49,17 +49,17 @@ def _heatmap_to_colormap(heatmap, image_size):
     return cv2.applyColorMap(hm_u8, cv2.COLORMAP_JET)
 
 
-def _overlay_heatmap(image_bgr, heatmap, *, alpha=HEATMAP_ALPHA):
+def _overlay_heatmap(image_bgr: np.ndarray, heatmap: np.ndarray, *, alpha: float = HEATMAP_ALPHA) -> np.ndarray:
     height, width = image_bgr.shape[:2]
     heatmap_bgr = _heatmap_to_colormap(heatmap, (width, height))
     return cv2.addWeighted(image_bgr, 1.0 - alpha, heatmap_bgr, alpha, 0.0)
 
 
-def _draw_person(canvas, person_name, person_data, color):
-    x1, y1, x2, y2 = person_data['head_location_xyxy']
+def _draw_person(canvas: np.ndarray, person_name: str, person_data: dict[str, Any], color: tuple[int, int, int]):
+    x1, y1, x2, y2 = person_data["head_location_xyxy"]
     height, width = canvas.shape[:2]
 
-    gx, gy = person_data['gaze_point_px']
+    gx, gy = person_data["gaze_point_px"]
     gx = int(round(gx))
     gy = int(round(gy))
     gx = int(max(0, min(gx, width - 1)))
@@ -71,26 +71,43 @@ def _draw_person(canvas, person_name, person_data, color):
     )
 
     cv2.rectangle(
-        canvas, (x1, y1), (x2, y2), color,
-        thickness=1, lineType=cv2.LINE_AA,
+        canvas,
+        (x1, y1),
+        (x2, y2),
+        color,
+        thickness=1,
+        lineType=cv2.LINE_AA,
     )
 
     cv2.line(
-        canvas, head_center, (gx, gy), color,
-        thickness=1, lineType=cv2.LINE_AA,
+        canvas,
+        head_center,
+        (gx, gy),
+        color,
+        thickness=1,
+        lineType=cv2.LINE_AA,
     )
 
     cv2.circle(
-        canvas, (gx, gy), 5, color,
-        thickness=-1, lineType=cv2.LINE_AA,
+        canvas,
+        (gx, gy),
+        5,
+        color,
+        thickness=-1,
+        lineType=cv2.LINE_AA,
     )
 
     label = f"{person_name}: {person_data['social_gaze_label']}"
     text_y = max(24, y1 - 10)
     cv2.putText(
-        canvas, label, (x1, text_y),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.65, color,
-        thickness=1, lineType=cv2.LINE_AA,
+        canvas,
+        label,
+        (x1, text_y),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.65,
+        color,
+        thickness=1,
+        lineType=cv2.LINE_AA,
     )
 
 
@@ -98,7 +115,7 @@ def main():
     factory = Factory()
     factory.load_dir_modules(module_root)
 
-    pipeline = Pipeline(factory, attributes=['head/social_gaze'])
+    pipeline = Pipeline(factory, attributes=["head/social_gaze"])
 
     pipeline.solve()
     pipeline.install_requirements()
@@ -106,26 +123,24 @@ def main():
 
     runner = Runner(pipeline)
 
-    image = cv2.imread('test_img.jpg')
+    image = cv2.imread("test_img.jpg")
     print(image.shape)
-    report = runner.run(data={
-        'default': image
-    })
+    report = runner.run(data={"default": image})
     # print(json.dumps(report, indent=2, ensure_ascii=False))
 
-    social_gaze = report.get('head_social_gaze', {})
-    has_principal = 'principal' in social_gaze and 'associate' in social_gaze
+    social_gaze = report.get("head_social_gaze", {})
+    has_principal = "principal" in social_gaze and "associate" in social_gaze
 
     if not has_principal:
-        print('Failed to get social gaze (need at least 2 detected heads)')
+        print("Failed to get social gaze (need at least 2 detected heads)")
         return
 
-    principal = social_gaze['principal']
-    associate = social_gaze['associate']
+    principal = social_gaze["principal"]
+    associate = social_gaze["associate"]
 
     combined_heatmap = None
     for person in (principal, associate):
-        hm = person.get('heatmap')
+        hm = person.get("heatmap")
         if hm is None:
             continue
         if combined_heatmap is None:
@@ -138,12 +153,13 @@ def main():
     else:
         canvas = image.copy()
 
-    _draw_person(canvas, 'principal', principal, PRINCIPAL_COLOR)
-    _draw_person(canvas, 'associate', associate, ASSOCIATE_COLOR)
+    _draw_person(canvas, "principal", principal, PRINCIPAL_COLOR)
+    _draw_person(canvas, "associate", associate, ASSOCIATE_COLOR)
 
-    cv2.imshow('Social Gaze - Combined Heatmap', canvas)
+    cv2.imshow("Social Gaze - Combined Heatmap", canvas)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

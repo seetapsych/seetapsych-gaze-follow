@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
-import os
 import argparse
+import os
 from pathlib import Path
 from typing import Any, Dict, Sequence, Tuple
 
 import numpy
 import torch
 from hydra import compose, initialize_config_dir
-
 from seetapsych_lib import api
 
-from .lib.models import build_model
 from .lib.inference import DyadicGazePredictor
+from .lib.models import build_model
 
-def build_gaze_model(args, gaze_device):
+
+def build_gaze_model(args: argparse.Namespace, gaze_device: str) -> tuple[Any, Any]:
     config_dir = os.path.abspath(args.config_dir)
     overrides = [
         f"stage={args.stage}",
@@ -36,7 +36,8 @@ def build_gaze_model(args, gaze_device):
     with initialize_config_dir(config_dir=config_dir, version_base=None):
         cfg = compose(config_name="config", overrides=overrides)
 
-    model = build_model(gaze_device, cfg, verbose=False)
+    torch_device = torch.device(gaze_device)
+    model = build_model(torch_device, cfg, verbose=False)
     return model, cfg
 
 
@@ -48,8 +49,7 @@ def order_two_heads(detections: Sequence[Dict]) -> Tuple[Dict, Dict]:
     """
     if len(detections) < 2:
         raise RuntimeError(
-            f"Expected at least 2 detected heads, but YOLOv5 returned "
-            f"{len(detections)}. Try lowering --head-conf."
+            f"Expected at least 2 detected heads, but YOLOv5 returned {len(detections)}. Try lowering --head-conf."
         )
 
     best_two = sorted(
@@ -58,22 +58,22 @@ def order_two_heads(detections: Sequence[Dict]) -> Tuple[Dict, Dict]:
         reverse=True,
     )[:2]
 
-    best_two.sort(
-        key=lambda item: (item["xyxy"][0] + item["xyxy"][2]) / 2.0
-    )
+    best_two.sort(key=lambda item: (item["xyxy"][0] + item["xyxy"][2]) / 2.0)
 
     return best_two[0], best_two[1]
 
 
 class Instance(api.Instance):
     def __init__(
-            self, pretrained: str, device: api.Device,
-        ):
+        self,
+        pretrained: str,
+        device: api.Device,
+    ):
         gaze_device = str(device)
         torch_device = torch.device(gaze_device)
 
         args = argparse.Namespace(
-            config_dir=Path(__file__).parent / 'lib' / 'config',
+            config_dir=Path(__file__).parent / "lib" / "config",
             stage="eval_dyadic",
             model="cosi",
             pretrained=pretrained,
@@ -91,20 +91,17 @@ class Instance(api.Instance):
         self.__torch_device = torch_device
         self.__predictor = predictor
 
-    def inference(self, *,
-                  data: dict[str, Any],
-                  report: dict[str, Any],
-                  **kwargs) -> dict[str, Any]:
-        input_data = data['default']
+    def inference(self, *, data: dict[str, Any], report: dict[str, Any], **kwargs: Any) -> dict[str, Any]:
+        input_data = data["default"]
         input_data = numpy.ascontiguousarray(input_data)  # [H, W, C] format, BGR layout
         image_rgb = input_data[:, :, ::-1]
 
-        head_detection = report.get('head_detection', [])
+        head_detection = report.get("head_detection", [])
 
         if len(head_detection) < 2:
             return {
-                'head_social_relation': {
-                    'success': False,
+                "head_social_relation": {
+                    "success": False,
                 }
             }
 
@@ -113,73 +110,42 @@ class Instance(api.Instance):
 
         prediction = self.__predictor.predict(image_rgb, head_boxes)
         prediction_json = prediction.to_dict(include_heatmaps=False)
-        
+
         return {
-            'head_social_gaze': {
-                'principal': {
-                    'head_location_xyxy': principal_det["xyxy"],
-                    'gaze_point_px': prediction_json['principal']['gaze_point_px'],
-                    'heatmap': prediction.principal.heatmap,
-                    'social_gaze_id': int(prediction.principal.social_gaze_id),
-                    'social_gaze_label': str(prediction.principal.social_gaze_label),
-                }, 
-                'associate': {
-                    'head_location_xyxy': associate_det["xyxy"],
-                    'gaze_point_px': prediction_json['associate']['gaze_point_px'],
-                    'heatmap': prediction.associate.heatmap,
-                    'social_gaze_id': int(prediction.associate.social_gaze_id),
-                    'social_gaze_label': str(prediction.associate.social_gaze_label),
+            "head_social_gaze": {
+                "principal": {
+                    "head_location_xyxy": principal_det["xyxy"],
+                    "gaze_point_px": prediction_json["principal"]["gaze_point_px"],
+                    "heatmap": prediction.principal.heatmap,
+                    "social_gaze_id": int(prediction.principal.social_gaze_id),
+                    "social_gaze_label": str(prediction.principal.social_gaze_label),
+                },
+                "associate": {
+                    "head_location_xyxy": associate_det["xyxy"],
+                    "gaze_point_px": prediction_json["associate"]["gaze_point_px"],
+                    "heatmap": prediction.associate.heatmap,
+                    "social_gaze_id": int(prediction.associate.social_gaze_id),
+                    "social_gaze_label": str(prediction.associate.social_gaze_label),
                 },
             }
         }
 
-    def detect_heads(self, image, *, conf=None, iou=None, max_det=None, imgsz=None):
-        height, width = image.shape[:2]
-
-        predict_kwargs = {"verbose": False}
-        if conf is not None:
-            predict_kwargs["conf"] = float(conf)
-        if iou is not None:
-            predict_kwargs["iou"] = float(iou)
-        if max_det is not None:
-            predict_kwargs["max_det"] = int(max_det)
-        if imgsz is not None:
-            predict_kwargs["imgsz"] = int(imgsz)
-
-        results = self.__model(image, **predict_kwargs)
-        boxes = results[0].boxes
-
-        heads = []
-
-        for det in boxes:
-            x1, y1, x2, y2 = det.xyxy[0].detach().cpu().numpy()
-            conf = float(det.conf[0])
-
-            heads.append({
-                "xyxy": [
-                    int(round(numpy.clip(x1, 0, width - 1))),
-                    int(round(numpy.clip(y1, 0, height - 1))),
-                    int(round(numpy.clip(x2, 0, width - 1))),
-                    int(round(numpy.clip(y2, 0, height - 1)))
-                ],
-                "score": float(conf),
-            })
-
-        return heads
-
 
 class Package(api.Package):
-    def create(self, *,
-               models: list[api.UsageModel],
-               parameters: dict[str, Any],
-               device: api.Device | None,
-               **kwargs) -> Instance:
-        assert len(models) >= 1, api.MissingModelError('At least one model required')
+    def create(
+        self,
+        *,
+        models: list[api.UsageModel],
+        parameters: dict[str, Any],
+        device: api.Device | None,
+        **kwargs: Any,
+    ) -> Instance:
+        assert len(models) >= 1, api.MissingModelError("At least one model required")
 
         pretrained = models[0].cache()
         return Instance(
             pretrained,
-            api.Device('cpu') if device is None else device,
+            api.Device("cpu") if device is None else device,
         )
 
 
@@ -191,5 +157,5 @@ def main():
     pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

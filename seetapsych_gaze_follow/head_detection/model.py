@@ -4,7 +4,6 @@ import os.path
 
 from seetapsych_lib import api
 
-
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -21,17 +20,18 @@ class Model(api.Model):
             return self.__path
 
         raise RuntimeError(
-            f'Unable to download on my own. '
-            f'Need to contact the developer to obtain {self.__name} and place it in the directory {ROOT}')
+            f"Unable to download on my own. Need to contact the developer "
+            f"to obtain {self.__name} and place it in the directory {ROOT}"
+        )
 
 
 def load() -> api.Model:
-    return Model('seeta-gaze-follow-yolo_head.pt')
+    return Model("seeta-gaze-follow-yolo_head.pt")
 
 
 def main():
     pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

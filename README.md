@@ -37,12 +37,12 @@ from seetapsych_lib.runtime.factory import Factory
 from seetapsych_lib.runtime.pipeline import Pipeline
 
 factory = Factory()
-factory.load_file_modules('seetapsych_gaze_follow/modules/head_detection.yml')
-factory.load_file_modules('seetapsych_gaze_follow/modules/cosi.yml')
+factory.load_file_modules("seetapsych_gaze_follow/modules/head_detection.yml")
+factory.load_file_modules("seetapsych_gaze_follow/modules/cosi.yml")
 
 pipeline = Pipeline(factory, ...)
 
-pipeline.add_attributes('head/detection', 'head/gaze_point')
+pipeline.add_attributes("head/detection", "head/gaze_point")
 # Or for dyadic social gaze:
 # pipeline.add_attributes('head/detection', 'head/social_gaze')
 ```

@@ -25,14 +25,88 @@ all = [
 ]
 dev = [
     "seetapsych-gaze-follow[all]",
+    # build tools
     "build>=1.4.4",
     "twine>=6.2.0",
+    # type stubs
     "scipy-stubs>=1.15.3.0",
+    # test tools
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "bandit>=1.7",
 ]
 
 [dependency-groups]
 dev = [
     "seetapsych-gaze-follow[dev]",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+exclude = [
+    ".venv",
+    "dist",
+    "build",
+    "*.egg-info",
+    "seetapsych_gaze_follow/_version.py",
+    # third-party vendored code
+    "seetapsych_gaze_follow/cosi/lib",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # PEP 8 syntax / style errors (pycodestyle)
+    "F",  # Undefined names, unused imports, logical errors (Pyflakes)
+    "B",  # Common logic pitfalls (flake8-bugbear: mutable defaults, bare except, etc.)
+    "I",  # Import ordering and grouping (isort)
+    "ANN001",  # Missing type annotation for function argument (flake8-annotations)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+plugins = []
+# Recommended checks (not covered by strict=false)
+warn_return_any = true
+no_implicit_optional = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+warn_unused_ignores = false
+disable_error_code = ["annotation-unchecked"]
+exclude = [
+    "seetapsych_gaze_follow/_version.py",
+    "tests/",
+    # third-party vendored code
+    "seetapsych_gaze_follow/cosi/lib",
+]
+
+[tool.bandit]
+exclude_dirs = [
+    "tests",
+    ".venv",
+    "dist",
+    "build",
+    # third-party vendored code
+    "seetapsych_gaze_follow/cosi/lib",
+]
+# ML-ecosystem standard usage skips:
+skips = [
+    "B101", # assert used routinely for pre/post-condition checks in research code
+    "B301", # pickle.load for pre-trained local model deserialization
+    "B311", # random.* for deterministic data augmentation seeds
+    "B403", # import pickle (paired with B301)
+    "B614", # torch.load for transfer-learning weight loading
 ]
 
 [tool.uv]

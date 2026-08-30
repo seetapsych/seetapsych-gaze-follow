@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from typing import Optional
 
-
-def _load_version() -> Optional[str]:
+def _load_version() -> str | None:
     try:
         from ._version import __version__  # type: ignore[import-not-found]
+
         return __version__.strip() or None
     except Exception:
         return None

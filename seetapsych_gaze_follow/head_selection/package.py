@@ -5,8 +5,8 @@ from typing import Any, Literal
 from seetapsych_lib import api
 from seetapsych_lib.utils.logger import logger
 
-SelectionMethod = Literal['max_size', 'max_confidence']
-SortMethod = Literal['left-right', 'right-left', 'top-bottom', 'bottom-top']
+SelectionMethod = Literal["max_size", "max_confidence"]
+SortMethod = Literal["left-right", "right-left", "top-bottom", "bottom-top"]
 
 
 def _box_size(xyxy: list[int]) -> int:
@@ -23,16 +23,16 @@ def _sort_detections(detections: list[dict], sort_method: SortMethod) -> list[di
     if not detections:
         return detections
 
-    if sort_method == 'left-right':
-        return sorted(detections, key=lambda d: _box_center(d['xyxy'])[0])
-    elif sort_method == 'right-left':
-        return sorted(detections, key=lambda d: _box_center(d['xyxy'])[0], reverse=True)
-    elif sort_method == 'top-bottom':
-        return sorted(detections, key=lambda d: _box_center(d['xyxy'])[1])
-    elif sort_method == 'bottom-top':
-        return sorted(detections, key=lambda d: _box_center(d['xyxy'])[1], reverse=True)
+    if sort_method == "left-right":
+        return sorted(detections, key=lambda d: _box_center(d["xyxy"])[0])
+    elif sort_method == "right-left":
+        return sorted(detections, key=lambda d: _box_center(d["xyxy"])[0], reverse=True)
+    elif sort_method == "top-bottom":
+        return sorted(detections, key=lambda d: _box_center(d["xyxy"])[1])
+    elif sort_method == "bottom-top":
+        return sorted(detections, key=lambda d: _box_center(d["xyxy"])[1], reverse=True)
     else:
-        logger.warning('Unknown sort method: %s', sort_method)
+        logger.warning("Unknown sort method: %s", sort_method)
         return detections
 
 
@@ -40,19 +40,19 @@ def _select_top(detections: list[dict], count: int, method: SelectionMethod) -> 
     if not detections or count <= 0:
         return []
 
-    if method == 'max_size':
-        sorted_by = sorted(detections, key=lambda d: _box_size(d['xyxy']), reverse=True)
-    elif method == 'max_confidence':
-        sorted_by = sorted(detections, key=lambda d: d.get('score', 0.0), reverse=True)
+    if method == "max_size":
+        sorted_by = sorted(detections, key=lambda d: _box_size(d["xyxy"]), reverse=True)
+    elif method == "max_confidence":
+        sorted_by = sorted(detections, key=lambda d: d.get("score", 0.0), reverse=True)
     else:
-        logger.warning('Unknown selection method: %s', method)
+        logger.warning("Unknown selection method: %s", method)
         sorted_by = detections
 
     return sorted_by[:count]
 
 
 class Instance(api.Instance):
-    def __init__(self, count: int = 1, method: SelectionMethod = 'max_size', sort: SortMethod = 'left-right'):
+    def __init__(self, count: int = 1, method: SelectionMethod = "max_size", sort: SortMethod = "left-right"):
         self.__count = count
         self.__method = method
         self.__sort = sort
@@ -60,16 +60,13 @@ class Instance(api.Instance):
     def reset(self):
         pass
 
-    def inference(self, *,
-                  data: dict[str, Any],
-                  report: dict[str, Any],
-                  **kwargs) -> dict[str, Any]:
-        head_detection = report.get('head_detection', [])
+    def inference(self, *, data: dict[str, Any], report: dict[str, Any], **kwargs: Any) -> dict[str, Any]:
+        head_detection = report.get("head_detection", [])
 
         if not head_detection:
-            report['head_selection'] = {
-                'count': 0,
-                'selected_indices': [],
+            report["head_selection"] = {
+                "count": 0,
+                "selected_indices": [],
             }
             return report
 
@@ -84,25 +81,28 @@ class Instance(api.Instance):
             except ValueError:
                 selected_indices.append(-1)
 
-        report['head_selection'] = {
-            'count': len(sorted_selected),
-            'selected_indices': selected_indices,
+        report["head_selection"] = {
+            "count": len(sorted_selected),
+            "selected_indices": selected_indices,
         }
 
-        report['head_detection'] = sorted_selected
+        report["head_detection"] = sorted_selected
 
         return report
 
 
 class Package(api.Package):
-    def create(self, *,
-               models: list[api.UsageModel],
-               parameters: dict[str, Any],
-               device: api.Device | None,
-               **kwargs) -> Instance:
-        count = parameters.get('count', 1)
-        method = parameters.get('method', 'max_size')
-        sort = parameters.get('sort', 'left-right')
+    def create(
+        self,
+        *,
+        models: list[api.UsageModel],
+        parameters: dict[str, Any],
+        device: api.Device | None,
+        **kwargs: Any,
+    ) -> Instance:
+        count = parameters.get("count", 1)
+        method = parameters.get("method", "max_size")
+        sort = parameters.get("sort", "left-right")
 
         return Instance(count=count, method=method, sort=sort)
 
@@ -115,5 +115,5 @@ def main():
     pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
