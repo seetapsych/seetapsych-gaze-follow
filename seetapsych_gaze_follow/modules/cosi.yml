@@ -1,12 +1,14 @@
 version: '1.0'
 module:
   uid: 503658c1-38fc-4255-b375-5a20d3133b9f
-  name: CoSI
-  version: 0.0.1
-  description: 'CoSI model for CoSI gaze following estimation.'
+  name: CoSIGaze
+  version: '1.0'
+  description: 'Confidence-coordinated Spatial Integration (CoSI) transformer for multi-person gaze following and dyadic social-gaze relation classification from a single RGB scene image.'
   keywords:
     - Head
-    - Detection
+    - Gaze Following
+    - Social Gaze
+    - Transformer
   requirements:
     - seetapsych-gaze-follow
     - einops>=0.8.2
@@ -16,9 +18,9 @@ module:
     - torchvision>=0.24.1
 packages:
   - uid: 9cfe3557-1ec4-4802-93bf-a8547e9e1eb8
-    name: HeadGazePoint(CoSI)
-    description: Predict per-head 2D gaze target point on scene image using CoSI transformer model
-    version: 0.0.1
+    name: SceneGazeFollow-CoSIGaze
+    description: Per-head scene-level gaze-following with CoSI transformer; for every input head box returns a 2D gaze target point (gaze_point_px) and a per-pixel gaze heatmap on the original scene image.
+    version: '1.0'
     usage_models: []
     inputs: []
     provides:
@@ -30,16 +32,16 @@ packages:
     models:
       - uid: 2929c9aa-510d-4eb7-b371-62d7cc9a21cf
         name: seeta-gaze-follow-cosi_weights.pth
-        version: 0.0.1
+        version: '1.0'
         recommended: true
         download:
           index: seeta-gaze-follow-cosi_weights.pth
           sha256: 65bf6af482a239f63caa0e586a12c96f8436cce340493d34e381d10f5e1fbed7
           url: https://www.modelscope.cn/models/seetapsych/seetapsych-models/resolve/master/seetapsych/gaze-follow/seeta-gaze-follow-cosi_weights.pth
   - uid: 1f77a2b5-9c4a-44c9-98c7-d357caec3178
-    name: HeadSocialRelation(CoSI)
-    description: Infer social gaze relations (looking-at, mutual, avert) between pairs of people
-    version: 0.0.1
+    name: SocialGaze-CoSIGaze
+    description: Dyadic social-gaze relation classifier using the shared CoSI transformer backbone; picks the top-2 most confident heads ordered horizontally (left = principal, right = associate) and predicts a 5-class output of share, mutual, single, miss, void, plus per-person gaze point and heatmap.
+    version: '1.0'
     usage_models: []
     inputs: []
     provides:
@@ -51,7 +53,7 @@ packages:
     models:
       - uid: 2929c9aa-510d-4eb7-b371-62d7cc9a21cf
         name: seeta-gaze-follow-cosi_weights.pth
-        version: 0.0.1
+        version: '1.0'
         recommended: true
         download:
           index: seeta-gaze-follow-cosi_weights.pth

@@ -2,19 +2,21 @@ version: '1.0'
 module:
   uid: dcb207b9-a61a-4034-a1fb-1c443ab22524
   name: HeadDetection
-  version: 0.0.1
-  description: 'HeadDetection for CoSI gaze following estimation.'
+  version: '1.0'
+  description: 'Ultralytics YOLO-based multi-person head detector with pluggable selection/sorting post-process, used as the front-end for CoSI gaze-following models.'
   keywords:
     - Head
     - Detection
+    - Selection
+    - YOLO
   requirements:
     - seetapsych-gaze-follow
     - ultralytics>=8.4.123
 packages:
   - uid: b73cc0cf-3300-498f-8795-d1f95a471075
-    name: HeadDetection(CoSI)
-    description: YOLO-based multi-person head detection with configurable confidence and NMS thresholds
-    version: 0.0.1
+    name: HeadDetection-CoSIGaze
+    description: Multi-person head detector with configurable confidence and NMS thresholds; produces head bounding boxes consumed by CoSI gaze-following and social-gaze packages.
+    version: '1.0'
     usage_models: []
     inputs: []
     provides:
@@ -26,23 +28,27 @@ packages:
       - name: img_size
         type: integer
         value: 640
-        description: Input image size for the model, this parameter affects the speed and accuracy of head detection
+        text: Inference Image Size
+        description: Input image size for inference, larger values improve small-head recall but increase latency and VRAM usage; keep as multiples of 32 (640 is a balanced default).
       - name: conf
         type: number
         value: 0.25
-        description: Detection confidence threshold, filters low-confidence boxes to balance false positives/negatives
+        text: Confidence Threshold
+        description: Minimum detection confidence threshold, raise to reduce false positives in crowded scenes (0.35-0.5 typical), lower to recover faraway/occluded heads (0.15-0.2).
       - name: iou
         type: number
         value: 0.45
-        description: IoU threshold for NMS, removes duplicate detection boxes
+        text: NMS IoU Threshold
+        description: NMS IoU threshold for duplicate suppression, lower (0.3-0.4) removes more overlapping boxes for dense crowds, higher (0.5-0.6) keeps more candidates for closely-spaced heads.
       - name: max_det
         type: integer
         value: 20
-        description: Max head detection boxes per frame, for multi-person gaze following scenarios
+        text: Max Detections Per Frame
+        description: Maximum detection boxes kept per frame after NMS; set to the expected upper bound of simultaneous people in the scene (e.g. 2-4 for dyads, 10-20 for audiences) to avoid noisy downstream cost.
     models:
       - uid: 15c57b89-d796-44e1-8671-acb78259b1ad
         name: seeta-gaze-follow-yolo_head.pt
-        version: 0.0.1
+        version: '1.0'
         recommended: true
         # entry:
         #   method: seetapsych_gaze_follow.head_detection.model.load
@@ -52,8 +58,8 @@ packages:
           url: https://www.modelscope.cn/models/seetapsych/seetapsych-models/resolve/master/seetapsych/gaze-follow/seeta-gaze-follow-yolo_head.pt
   - uid: 763b1fd8-b75a-47e9-a0cd-d096687fde7f
     name: HeadSelection
-    description: Select top-N head detections by size or confidence with spatial sorting options
-    version: 0.0.1
+    description: Post-process that selects top-N head detections by size or confidence, then reorders them spatially (left-right/top-bottom) before passing to downstream gaze-following or social-gaze modules.
+    version: '1.0'
     priority: 100
     usage_models: []
     inputs: []
@@ -68,14 +74,16 @@ packages:
       - name: count
         type: integer
         value: 1
-        description: Number of head detections to select
+        text: Number of Heads to Keep
+        description: Number of heads to keep after selection; match the number of tracked people in the scene, e.g. 1 for single-target, 2 for dyadic social-gaze analysis.
       - name: method
         type: selection
         value: max_size
         selection:
           - max_size
           - max_confidence
-        description: Selection method for head detections, max_size or max_confidence
+        text: Selection Criterion
+        description: Criterion used to pick the top-N heads. Use max_size to prefer closest/largest heads (dominant foreground person); use max_confidence when occlusion is rare and detector score is trustworthy.
       - name: sort
         type: selection
         value: left-right
@@ -84,5 +92,6 @@ packages:
           - right-left
           - top-bottom
           - bottom-top
-        description: Sorting method for head detections
+        text: Spatial Sort Order
+        description: Spatial order applied after selection. left-right matches screen reading order and is recommended for dyadic social-gaze (left = principal, right = associate); top-bottom is better for vertically stacked layouts.
     models: []
