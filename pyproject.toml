@@ -6,7 +6,7 @@ requires-python = ">=3.10"
 dynamic = ["version"]
 license = { file = "LICENSE" }
 dependencies = [
-    "seetapsych-lib",
+    "seetapsych-lib>=0.0.3",
 ]
 
 [project.urls]
