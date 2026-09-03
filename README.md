@@ -95,6 +95,9 @@ Module config: [head_detection.yml](seetapsych_gaze_follow/modules/head_detectio
 |---|---|
 | seeta-gaze-follow-yolo_head.pt | ✓ |
 
+**Output Attributes**
+- `head/detection` — [spec](https://github.com/seetapsych/seetapsych-attributes#headdetection).
+
 #### HeadSelection
 
 **Description**: Post-process that selects top-N head detections by size or confidence, then reorders them spatially (left-right/top-bottom) before passing to downstream gaze-following or social-gaze modules.
@@ -108,6 +111,10 @@ Module config: [head_detection.yml](seetapsych_gaze_follow/modules/head_detectio
 | sort | selection | left-right | left-right, right-left, top-bottom, bottom-top | Spatial order applied after selection. left-right matches screen reading order and is recommended for dyadic social-gaze (left = principal, right = associate); top-bottom is better for vertically stacked layouts. |
 
 **Models**: *(none)*
+
+**Output Attributes**
+- `head/selection` — [spec](https://github.com/seetapsych/seetapsych-attributes#headselection).
+- `head/detection` — [spec](https://github.com/seetapsych/seetapsych-attributes#headdetection).
 
 ### CoSIGaze
 
@@ -132,6 +139,9 @@ Module config: [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)
 |---|---|
 | seeta-gaze-follow-cosi_weights.pth | ✓ |
 
+**Output Attributes**
+- `head/gaze_point` — [spec](https://github.com/seetapsych/seetapsych-attributes#headgaze_point).
+
 #### SocialGaze-CoSIGaze
 
 **Description**: Dyadic social-gaze relation classifier using the shared CoSI transformer backbone; picks the top-2 most confident heads ordered horizontally (left = principal, right = associate) and predicts a 5-class relation, plus per-person gaze point and heatmap.
@@ -143,6 +153,9 @@ Module config: [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)
 | Name | Recommended |
 |---|---|
 | seeta-gaze-follow-cosi_weights.pth | ✓ |
+
+**Output Attributes**
+- `head/social_gaze` — [spec](https://github.com/seetapsych/seetapsych-attributes#headsocial_gaze).
 
 **SocialGaze class mapping** (social_gaze_id → social_gaze_label):
 
