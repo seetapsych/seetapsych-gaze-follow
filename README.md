@@ -51,15 +51,15 @@ pipeline.add_attributes("head/detection", "head/gaze_point")
 
 | YAML Path | Packages |
 |---|---|
-| [head_detection.yml](seetapsych_gaze_follow/modules/head_detection.yml) | HeadDetection-CoSIGaze, HeadSelection |
-| [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml) | SceneGazeFollow-CoSIGaze, SocialGaze-CoSIGaze |
+| [head_detection.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/head_detection.yml) | HeadDetection-CoSIGaze, HeadSelection |
+| [cosi.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/cosi.yml) | SceneGazeFollow-CoSIGaze, SocialGaze-CoSIGaze |
 
 ## Module Pipeline
 
 The gaze following pipeline consists of two stages loaded from separate module configs:
 
-1. **HeadDetection** ([head_detection.yml](seetapsych_gaze_follow/modules/head_detection.yml)) — multi-head detector, plus an optional HeadSelection post-processor.
-2. **CoSI** ([cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)) — confidence-coordinated spatial integration model for gaze point and social gaze relation prediction.
+1. **HeadDetection** ([head_detection.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/head_detection.yml)) — multi-head detector, plus an optional HeadSelection post-processor.
+2. **CoSI** ([cosi.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/cosi.yml)) — confidence-coordinated spatial integration model for gaze point and social gaze relation prediction.
 
 Dependency graph:
 - `head/detection` → `head/gaze_point` (single-person gaze following)
@@ -69,7 +69,7 @@ Dependency graph:
 
 Ultralytics multi-person head detector with pluggable selection/sorting post-process, used as the front-end for CoSI gaze-following models.
 
-Module config: [head_detection.yml](seetapsych_gaze_follow/modules/head_detection.yml)
+Module config: [head_detection.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/head_detection.yml)
 
 | Package Name | Provides Attributes | Requires Attributes |
 |---|---|---|
@@ -120,7 +120,7 @@ Module config: [head_detection.yml](seetapsych_gaze_follow/modules/head_detectio
 
 Confidence-coordinated Spatial Integration (CoSI) transformer for multi-person gaze following and dyadic social-gaze relation classification from a single RGB scene image.
 
-Module config: [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)
+Module config: [cosi.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/cosi.yml)
 
 | Package Name | Provides Attributes | Requires Attributes |
 |---|---|---|
