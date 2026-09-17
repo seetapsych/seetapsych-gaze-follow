@@ -2,6 +2,11 @@
 
 > Gaze following estimation modules for SeetaPsych. Detects heads in scene and estimates where each person is looking (gaze point on image plane, and social gaze relations between people).
 
+[简体中文](README_CN.md) | English
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](pyproject.toml)
+[![License](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)
+
 ## Usage
 
 This project is already included in the seetapsych-lib default configuration. Download and use it via `seetapsych-manager download`.
@@ -49,24 +54,24 @@ pipeline.add_attributes("head/detection", "head/gaze_point")
 
 For complete end-to-end examples with visualization, see:
 
-* [examples/image_head_detection.py](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/examples/image_head_detection.py) — static-image multi-head detection with confidence labels.
-* [examples/image_gaze_point.py](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/examples/image_gaze_point.py) — static-image per-head gaze following with per-head heatmap panels.
-* [examples/image_social_gaze.py](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/examples/image_social_gaze.py) — static-image dyadic social-gaze relation classification with per-person stacked panels.
-* [examples/video_social_gaze.py](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/examples/video_social_gaze.py) — offline video batch rendering of social gaze, preserving the original FPS and resolution.
+* [examples/image_head_detection.py](examples/image_head_detection.py) — static-image multi-head detection with confidence labels.
+* [examples/image_gaze_point.py](examples/image_gaze_point.py) — static-image per-head gaze following with per-head heatmap panels.
+* [examples/image_social_gaze.py](examples/image_social_gaze.py) — static-image dyadic social-gaze relation classification with per-person stacked panels.
+* [examples/video_social_gaze.py](examples/video_social_gaze.py) — offline video batch rendering of social gaze, preserving the original FPS and resolution.
 
 ### Module Catalog
 
 | YAML Path | Packages |
 |---|---|
-| [head_detection.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/head_detection.yml) | HeadDetection-CoSIGaze, HeadSelection |
-| [cosi.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/cosi.yml) | SceneGazeFollow-CoSIGaze, SocialGaze-CoSIGaze |
+| [head_detection.yml](seetapsych_gaze_follow/modules/head_detection.yml) | HeadDetection-CoSIGaze, HeadSelection |
+| [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml) | SceneGazeFollow-CoSIGaze, SocialGaze-CoSIGaze |
 
 ## Module Pipeline
 
 The gaze following pipeline consists of two stages loaded from separate module configs:
 
-1. **HeadDetection** ([head_detection.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/head_detection.yml)) — multi-head detector, plus an optional HeadSelection post-processor.
-2. **CoSI** ([cosi.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/cosi.yml)) — confidence-coordinated spatial integration model for gaze point and social gaze relation prediction.
+1. **HeadDetection** ([head_detection.yml](seetapsych_gaze_follow/modules/head_detection.yml)) — multi-head detector, plus an optional HeadSelection post-processor.
+2. **CoSI** ([cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)) — confidence-coordinated spatial integration model for gaze point and social gaze relation prediction.
 
 Dependency graph:
 - `head/detection` → `head/gaze_point` (single-person gaze following)
@@ -77,11 +82,11 @@ Dependency graph:
 Ultralytics YOLO-based multi-person head detector with pluggable selection/sorting post-process, used as the front-end for CoSI gaze-following models.
 
 <div align="center" id="figure-headdet-result">
-  <img src="https://raw.githubusercontent.com/seetapsych/seetapsych-gaze-follow/main/assets/example-headdet.jpg" alt="HeadDetection visualization of multi-head bounding boxes with confidence scores on a sample scene" style="max-width: 100%; max-height: 480px;"/>
+  <img src="assets/example-headdet.jpg" alt="HeadDetection visualization of multi-head bounding boxes with confidence scores on a sample scene" style="max-width: 100%; max-height: 480px;"/>
   <p><em><strong>Figure 1.</strong> HeadDetection output visualization — multi-head bounding boxes and per-box confidence scores.</em></p>
 </div>
 
-Module config: [head_detection.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/head_detection.yml)
+Module config: [head_detection.yml](seetapsych_gaze_follow/modules/head_detection.yml)
 
 | Package Name | Provides Attributes | Requires Attributes |
 |---|---|---|
@@ -132,7 +137,7 @@ Module config: [head_detection.yml](https://github.com/seetapsych/seetapsych-gaz
 
 Confidence-coordinated Spatial Integration (CoSI) transformer for multi-person gaze following and dyadic social-gaze relation classification from a single RGB scene image.
 
-Module config: [cosi.yml](https://github.com/seetapsych/seetapsych-gaze-follow/blob/main/seetapsych_gaze_follow/modules/cosi.yml)
+Module config: [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)
 
 | Package Name | Provides Attributes | Requires Attributes |
 |---|---|---|
@@ -142,7 +147,7 @@ Module config: [cosi.yml](https://github.com/seetapsych/seetapsych-gaze-follow/b
 #### SceneGazeFollow-CoSIGaze
 
 <div align="center" id="figure-gazepoint-result">
-  <img src="https://raw.githubusercontent.com/seetapsych/seetapsych-gaze-follow/main/assets/example-gazepoint.jpg" alt="SceneGazeFollow per-head output with stacked head panels, gaze heatmaps, gaze lines and target points" style="max-width: 100%; max-height: 480px;"/>
+  <img src="assets/example-gazepoint.jpg" alt="SceneGazeFollow per-head output with stacked head panels, gaze heatmaps, gaze lines and target points" style="max-width: 100%; max-height: 480px;"/>
   <p><em><strong>Figure 2.</strong> SceneGazeFollow output visualization — per-head stacked panels showing each head's gaze heatmap, gaze line and target point.</em></p>
 </div>
 
@@ -167,7 +172,7 @@ Module config: [cosi.yml](https://github.com/seetapsych/seetapsych-gaze-follow/b
 #### SocialGaze-CoSIGaze
 
 <div align="center" id="figure-socialgaze-result">
-  <img src="https://raw.githubusercontent.com/seetapsych/seetapsych-gaze-follow/main/assets/example-socialgaze.jpg" alt="SocialGaze dyadic output with principal and associate stacked panels, each showing gaze heatmap and social relation label" style="max-width: 100%; max-height: 480px;"/>
+  <img src="assets/example-socialgaze.jpg" alt="SocialGaze dyadic output with principal and associate stacked panels, each showing gaze heatmap and social relation label" style="max-width: 100%; max-height: 480px;"/>
   <p><em><strong>Figure 3.</strong> SocialGaze output visualization — principal (green) and associate (red) panels, each with per-person heatmap, gaze target, and social-gaze relation label.</em></p>
 </div>
 

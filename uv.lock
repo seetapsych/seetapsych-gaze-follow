@@ -2975,7 +2975,7 @@ dev = [{ name = "seetapsych-gaze-follow", extras = ["dev"] }]
 
 [[package]]
 name = "seetapsych-lib"
-version = "0.0.4rc1"
+version = "0.0.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jsonschema2md" },
@@ -2987,9 +2987,9 @@ dependencies = [
     { name = "tomli" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/65/e5/0e2ef51fcc1fc8ff6f54736cfceb951378d951f6987c4d36f2c1d809c5c9/seetapsych_lib-0.0.4rc1.tar.gz", hash = "sha256:432d411d453f7f72e09fc959bd439ab8291761e0ba89e18d8da32c40959ae0a2", size = 1948215, upload-time = "2026-09-14T11:34:31.427Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/77/0e/f460231404cfbe6db0ab1dda9232c3750de915779e457151b1a9e85e5956/seetapsych_lib-0.0.4.tar.gz", hash = "sha256:42e0a9b9439feec3643a1255a3c1217b4b6869b06ce8033af48562b298bf0155", size = 1962382, upload-time = "2026-09-17T05:11:27.147Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/80/29/b8ad217349beda9c877a30f4d022ce45121c4873c4463c13ef39503fb8ad/seetapsych_lib-0.0.4rc1-py3-none-any.whl", hash = "sha256:4581fe65c5620b999aefbaeb0700bacfb2002a6d55cda81eeb62e20090f5a02d", size = 110427, upload-time = "2026-09-14T11:34:29.707Z" },
+    { url = "https://files.pythonhosted.org/packages/21/6d/d2582a054b93adb917c48fa43161aacc8a9616ca9e44d1fc198c71e7cbda/seetapsych_lib-0.0.4-py3-none-any.whl", hash = "sha256:187c0dd7e65ca206ce0f47da356545bc5770deb5c27c14299dd85b0e3b5b7f0e", size = 110972, upload-time = "2026-09-17T05:11:25.586Z" },
 ]
 
 [[package]]
