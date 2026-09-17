@@ -151,11 +151,6 @@ pipeline.add_attributes("head/detection", "head/gaze_point")
   <p><em><strong>图 2</strong> SceneGazeFollow 输出可视化 — 逐人堆叠面板分别显示该头部的注视热力图、视线与目标点。</em></p>
 </div>
 
-<div align="center" id="video-gazepoint-demo">
-  <video src="https://github.com/user-attachments/assets/ecf5ec9c-23de-4343-b8d7-7e79db2d83ca" controls style="max-width: 100%; max-height: 480px;"></video>
-  <p><em><strong>视频 1</strong> SceneGazeFollow 视频演示 — 逐帧注视跟随，附注视热力图、视线与目标点。</em></p>
-</div>
-
 **说明**：基于 CoSI 变换器的逐人场景级注视跟随；对每个输入人头框返回原图上的 2D 注视目标点（`gaze_point_px`）以及逐像素注视热力图。
 
 **参数**：*(无)*
@@ -174,6 +169,11 @@ pipeline.add_attributes("head/detection", "head/gaze_point")
 <div align="center" id="figure-socialgaze-result">
   <img src="assets/example-socialgaze.jpg" alt="SocialGaze 双人输出：主视角与关联人物堆叠面板，各自显示注视热力图与社交关系标签" style="max-width: 100%; max-height: 480px;"/>
   <p><em><strong>图 3</strong> SocialGaze 输出可视化 — 主视角（绿色）与关联人物（红色）面板，各含逐人热力图、注视目标与社交注视关系标签。</em></p>
+</div>
+
+<div align="center" id="video-socialgaze-demo">
+  <video src="https://github.com/user-attachments/assets/ecf5ec9c-23de-4343-b8d7-7e79db2d83ca" controls style="max-width: 100%; max-height: 480px;"></video>
+  <p><em><strong>视频 1</strong> SocialGaze 视频演示 — 双人社交注视的离线批量渲染，画面中叠加融合后的注视热力图，并标注逐人社交注视关系标签。</em></p>
 </div>
 
 **说明**：基于共享 CoSI 变换器主干的双人社交注视关系分类器；选取按水平排序后置信度最高的前 2 个头部（左 = 主视角人物 principal，右 = 关联人物 associate），预测 5 类输出 share、mutual、single、miss、void，同时输出逐人注视点与热力图。

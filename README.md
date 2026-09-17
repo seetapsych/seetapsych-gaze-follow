@@ -151,11 +151,6 @@ Module config: [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)
   <p><em><strong>Figure 2.</strong> SceneGazeFollow output visualization — per-head stacked panels showing each head's gaze heatmap, gaze line and target point.</em></p>
 </div>
 
-<div align="center" id="video-gazepoint-demo">
-  <video src="https://github.com/user-attachments/assets/ecf5ec9c-23de-4343-b8d7-7e79db2d83ca" controls style="max-width: 100%; max-height: 480px;"></video>
-  <p><em><strong>Video 1.</strong> SceneGazeFollow video demo — per-frame gaze following with gaze heatmaps, gaze lines and target points.</em></p>
-</div>
-
 **Description**: Per-head scene-level gaze-following with CoSI transformer; for every input head box returns a 2D gaze target point (gaze_point_px) and a per-pixel gaze heatmap on the original scene image.
 
 **Parameters**: *(none)*
@@ -174,6 +169,11 @@ Module config: [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)
 <div align="center" id="figure-socialgaze-result">
   <img src="assets/example-socialgaze.jpg" alt="SocialGaze dyadic output with principal and associate stacked panels, each showing gaze heatmap and social relation label" style="max-width: 100%; max-height: 480px;"/>
   <p><em><strong>Figure 3.</strong> SocialGaze output visualization — principal (green) and associate (red) panels, each with per-person heatmap, gaze target, and social-gaze relation label.</em></p>
+</div>
+
+<div align="center" id="video-socialgaze-demo">
+  <video src="https://github.com/user-attachments/assets/ecf5ec9c-23de-4343-b8d7-7e79db2d83ca" controls style="max-width: 100%; max-height: 480px;"></video>
+  <p><em><strong>Video 1.</strong> SocialGaze video demo — offline batch rendering of dyadic social gaze, with fused gaze heatmaps overlaid on the scene and per-person social-gaze relation annotations.</em></p>
 </div>
 
 **Description**: Dyadic social-gaze relation classifier using the shared CoSI transformer backbone; picks the top-2 most confident heads ordered horizontally (left = principal, right = associate) and predicts a 5-class output of share, mutual, single, miss, void, plus per-person gaze point and heatmap.
