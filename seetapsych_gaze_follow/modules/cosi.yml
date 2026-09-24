@@ -21,7 +21,7 @@ packages:
     name: SceneGazeFollow-CoSIGaze
     description: Per-head scene-level gaze-following with CoSI transformer; for every input head box returns a 2D gaze target point (gaze_point_px) and a per-pixel gaze heatmap on the original scene image.
     version: '1.0'
-    usage_models: []
+    usage_models: ['', 'dino']
     inputs: []
     provides:
       - head/gaze_point
@@ -38,11 +38,20 @@ packages:
           index: seeta-gaze-follow-cosi_weights.pth
           sha256: 65bf6af482a239f63caa0e586a12c96f8436cce340493d34e381d10f5e1fbed7
           url: https://www.modelscope.cn/models/seetapsych/seetapsych-models/resolve/master/seetapsych/gaze-follow/seeta-gaze-follow-cosi_weights.pth
+      - uid: eca80a57-6042-43f0-89cf-9b7ddc0aed8c
+        name: dinov2_vitb14_pretrain.pth
+        usage: 'dino'
+        version: '1.0'
+        recommended: true
+        download:
+          index: dinov2_vitb14_pretrain.pth
+          sha256: 0b8b82f85de91b424aded121c7e1dcc2b7bc6d0adeea651bf73a13307fad8c73
+          url: https://www.modelscope.cn/models/seetapsych/seetapsych-models/resolve/master/dinov2/dinov2_vitb14_pretrain.pth
   - uid: 1f77a2b5-9c4a-44c9-98c7-d357caec3178
     name: SocialGaze-CoSIGaze
     description: Dyadic social-gaze relation classifier using the shared CoSI transformer backbone; picks the top-2 most confident heads ordered horizontally (left = principal, right = associate) and predicts a 5-class output of share, mutual, single, miss, void, plus per-person gaze point and heatmap.
     version: '1.0'
-    usage_models: []
+    usage_models: ['', 'dino']
     inputs: []
     provides:
       - head/social_gaze
@@ -59,3 +68,12 @@ packages:
           index: seeta-gaze-follow-cosi_weights.pth
           sha256: 65bf6af482a239f63caa0e586a12c96f8436cce340493d34e381d10f5e1fbed7
           url: https://www.modelscope.cn/models/seetapsych/seetapsych-models/resolve/master/seetapsych/gaze-follow/seeta-gaze-follow-cosi_weights.pth
+      - uid: eca80a57-6042-43f0-89cf-9b7ddc0aed8c
+        name: dinov2_vitb14_pretrain.pth
+        usage: 'dino'
+        version: '1.0'
+        recommended: true
+        download:
+          index: dinov2_vitb14_pretrain.pth
+          sha256: 0b8b82f85de91b424aded121c7e1dcc2b7bc6d0adeea651bf73a13307fad8c73
+          url: https://www.modelscope.cn/models/seetapsych/seetapsych-models/resolve/master/dinov2/dinov2_vitb14_pretrain.pth

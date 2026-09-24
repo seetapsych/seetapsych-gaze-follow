@@ -14,13 +14,16 @@ from .lib.inference import DyadicGazePredictor
 from .lib.models import build_model
 
 
-def build_gaze_model(args: argparse.Namespace, gaze_device: str) -> tuple[Any, Any]:
+def build_gaze_model(args: argparse.Namespace, gaze_device: str, overrides: list[str] | None = None) -> tuple[Any, Any]:
+    overrides = overrides or []
     config_dir = os.path.abspath(args.config_dir)
-    overrides = [
-        f"stage={args.stage}",
-        f"model={args.model}",
-        f"pretrained_weights={args.pretrained}",
-    ]
+    overrides.extend(
+        [
+            f"stage={args.stage}",
+            f"model={args.model}",
+            f"pretrained_weights={args.pretrained}",
+        ]
+    )
 
     if args.model == "cosi":
         overrides.extend(
@@ -67,6 +70,7 @@ class Instance(api.Instance):
     def __init__(
         self,
         pretrained: str,
+        dino_weights: str,
         device: api.Device,
     ):
         gaze_device = str(device)
@@ -81,7 +85,17 @@ class Instance(api.Instance):
             device=gaze_device,
         )
 
-        gaze_model, cfg = build_gaze_model(args, gaze_device)
+        dinov2_dir = Path(__file__).parent / "dinov2"
+        gaze_model, cfg = build_gaze_model(
+            args,
+            gaze_device,
+            overrides=[
+                "model.backbone.load_local=true",
+                f"model.backbone.local_dir={dinov2_dir}",
+                f"model.backbone.weights={dino_weights}",
+            ],
+        )
+
         predictor = DyadicGazePredictor(
             gaze_model,
             input_size=cfg.data.transform.input_resolution,
@@ -140,11 +154,18 @@ class Package(api.Package):
         device: api.Device | None,
         **kwargs: Any,
     ) -> Instance:
-        assert len(models) >= 1, api.MissingModelError("At least one model required")
+        using_models = {m.usage: m for m in models}
+        assert "" in using_models, api.MissingModelError('Usage "" model required')
+        # assert 'dino' in using_models, api.MissingModelError('Usage "dino" model required')
 
-        pretrained = models[0].cache()
+        using_dino_model = using_models.get("dino", None)
+
+        pretrained = using_models[""].cache()
+        dino_weights = using_dino_model.cache() if using_dino_model is not None else ""
+
         return Instance(
             pretrained,
+            dino_weights,
             api.Device("cpu") if device is None else device,
         )
 

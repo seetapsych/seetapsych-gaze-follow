@@ -57,6 +57,7 @@ exclude = [
     "seetapsych_gaze_follow/_version.py",
     # third-party vendored code
     "seetapsych_gaze_follow/cosi/lib",
+    "seetapsych_gaze_follow/cosi/dinov2",
 ]
 
 [tool.ruff.lint]
@@ -88,6 +89,7 @@ exclude = [
     "tests/",
     # third-party vendored code
     "seetapsych_gaze_follow/cosi/lib",
+    "seetapsych_gaze_follow/cosi/dinov2",
 ]
 
 [tool.bandit]
@@ -98,6 +100,7 @@ exclude_dirs = [
     "build",
     # third-party vendored code
     "seetapsych_gaze_follow/cosi/lib",
+    "seetapsych_gaze_follow/cosi/dinov2",
 ]
 # ML-ecosystem standard usage skips:
 skips = [

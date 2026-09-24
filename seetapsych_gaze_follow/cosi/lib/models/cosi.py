@@ -37,13 +37,14 @@ class Backbone(nn.Module, ABC):
 class DinoV2Backbone(Backbone):
     def __init__(self, model_name, 
                  load_local=False,
-                 local_dir = ''):
+                 local_dir = '',
+                 **kwargs):
         super(DinoV2Backbone, self).__init__()
         print("Here loading the dino model..")
         if load_local:
-            self.model = torch.hub.load(local_dir, model_name, force_reload=True, source='local')
+            self.model = torch.hub.load(local_dir, model_name, force_reload=True, source='local',**kwargs)
         else:
-            self.model = torch.hub.load('facebookresearch/dinov2', model_name)
+            self.model = torch.hub.load('facebookresearch/dinov2', model_name, **kwargs)
         print("Done loading the dino model")
 
     def forward(self, x):
@@ -262,10 +263,14 @@ class CoSi(BaseGazeModel):
             print("Initialized with Pattern Mode %s"%self.integration)
 
         # Initialize the Context Extractor
+        backbone_kwargs = {}
+        if cfg.model.backbone.weights:
+            backbone_kwargs['weights'] = cfg.model.backbone.weights
         backbone = DinoV2Backbone(
             model_name=cfg.model.backbone.name,
             load_local=cfg.model.backbone.load_local,
-            local_dir=cfg.model.backbone.local_dir)
+            local_dir=cfg.model.backbone.local_dir,
+            **backbone_kwargs)
         self.out_size = cfg.data.transform.output_resolution
         self.gaze_backbone = ContextExtractor(
             backbone=backbone,

@@ -198,3 +198,17 @@ Module config: [cosi.yml](seetapsych_gaze_follow/modules/cosi.yml)
 | 2 | single |
 | 3 | miss |
 | 4 | void |
+
+## License
+
+This project is licensed under the **BSD 3-Clause License**. See the top-level
+[LICENSE](LICENSE) file for the full terms.
+
+### Third-Party Licenses
+
+CoSI uses the pretrained DINOv2 ViT model; the DINOv2 code snapshot is vendored
+under `seetapsych_gaze_follow/cosi/dinov2/`.
+
+| Component | License |
+|---|---|
+| [DINOv2](seetapsych_gaze_follow/cosi/dinov2/) (core ViT backbones and `hubconf.py` entry points) | [LICENSE](seetapsych_gaze_follow/cosi/dinov2/LICENSE) — Apache-2.0 |

@@ -198,3 +198,16 @@ pipeline.add_attributes("head/detection", "head/gaze_point")
 | 2 | single |
 | 3 | miss |
 | 4 | void |
+
+## 许可证
+
+本项目基于 **BSD 3-Clause License** 开源，完整条款详见根目录的 [LICENSE](LICENSE) 文件。
+
+### 第三方许可证声明
+
+CoSI 使用了 DINOv2 ViT 预训练模型，其中 DINOv2 以代码快照形式内置于本项目的
+`seetapsych_gaze_follow/cosi/dinov2/` 目录。
+
+| 组件 | 许可证 |
+|---|---|
+| [DINOv2](seetapsych_gaze_follow/cosi/dinov2/)（核心 ViT 主干网络与 `hubconf.py` 入口） | [LICENSE](seetapsych_gaze_follow/cosi/dinov2/LICENSE) — Apache-2.0 |
