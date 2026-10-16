@@ -99,8 +99,8 @@ exclude_dirs = [
     "dist",
     "build",
     # third-party vendored code
-    "seetapsych_gaze_follow/cosi/lib",
-    "seetapsych_gaze_follow/cosi/dinov2",
+    "seetapsych_gaze_follow/cosi/lib/*",
+    "seetapsych_gaze_follow/cosi/dinov2/*",
 ]
 # ML-ecosystem standard usage skips:
 skips = [
