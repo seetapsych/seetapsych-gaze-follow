@@ -58,6 +58,9 @@ For complete end-to-end examples with visualization, see:
 * [examples/image_gaze_point.py](examples/image_gaze_point.py) — static-image per-head gaze following with per-head heatmap panels.
 * [examples/image_social_gaze.py](examples/image_social_gaze.py) — static-image dyadic social-gaze relation classification with per-person stacked panels.
 * [examples/video_social_gaze.py](examples/video_social_gaze.py) — offline video batch rendering of social gaze, preserving the original FPS and resolution.
+* [examples/camera_gaze_point.py](examples/camera_gaze_point.py) — asynchronous scene-gaze snapshots alongside an uninterrupted live camera preview.
+
+Run `python examples/camera_gaze_point.py` with a webcam connected. Press Space to capture, N to cycle per-head heatmaps, F to toggle fullscreen, and Esc, Q, or X to exit. Results are drawn on the captured scene, not on later live frames. The initial window fits the desktop; resizing, maximizing, and fullscreen preserve both scene aspect ratios.
 
 ### Module Catalog
 
